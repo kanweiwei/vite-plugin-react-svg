@@ -1,13 +1,17 @@
-import svgr from '@svgr/core';
+import svgr from "@svgr/core";
 
-const fs = require('fs');
-const babel = require('@babel/core');
+import fs from "fs";
+import babel from "@babel/core";
 const fileRegex = /\.svg$/;
 
-function defaultTemplate({ template }, opts, { imports, interfaces, componentName, props, jsx, exports }) {
-  const plugins = ['jsx'];
+function defaultTemplate(
+  { template },
+  opts,
+  { imports, interfaces, componentName, props, jsx, exports }
+) {
+  const plugins = ["jsx"];
   if (opts.typescript) {
-    plugins.push('typescript');
+    plugins.push("typescript");
   }
   const typeScriptTpl = template.smart({ plugins });
   return typeScriptTpl.ast`
@@ -25,10 +29,14 @@ function defaultTemplate({ template }, opts, { imports, interfaces, componentNam
 
 function compileFileToJS(src, id) {
   // 读取文件内容
-  const buf = fs.readFileSync(id, 'utf-8');
+  const buf = fs.readFileSync(id, "utf-8");
   const svgXml = buf.toString();
-  const base64 = new Buffer(svgXml).toString('base64');
-  const jsx = svgr.sync(svgXml, { icon: true, template: defaultTemplate }, { componentName: 'ReactComponent' });
+  const base64 = new Buffer(svgXml).toString("base64");
+  const jsx = svgr.sync(
+    svgXml,
+    { icon: true, template: defaultTemplate },
+    { componentName: "ReactComponent" }
+  );
   const component = `
     ${jsx}
 
@@ -40,7 +48,7 @@ function compileFileToJS(src, id) {
   const result = babel.transformSync(component, {
     babelrc: false,
     ast: true,
-    presets: [['@babel/preset-react']],
+    presets: [["@babel/preset-react"]],
     sourceFileName: id,
     configFile: false,
   });
@@ -49,7 +57,7 @@ function compileFileToJS(src, id) {
 
 export default function svgPlugin() {
   return {
-    nane: 'transfrom-svg',
+    nane: "transfrom-svg",
     transform(src, id) {
       if (fileRegex.test(id)) {
         return {
