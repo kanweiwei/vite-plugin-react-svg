@@ -27,14 +27,15 @@ function defaultTemplate(
   `;
 }
 
-function compileFileToJS(src, id) {
+function compileFileToJS(src, id, options) {
   // 读取文件内容
   const buf = fs.readFileSync(id, "utf-8");
   const svgXml = buf.toString();
   const base64 = new Buffer(svgXml).toString("base64");
+  const ops = Object.assign({},{ icon: true, template: defaultTemplate }, options);
   const jsx = svgr.sync(
     svgXml,
-    { icon: true, template: defaultTemplate },
+    ops,
     { componentName: "ReactComponent" }
   );
   const component = `
@@ -55,13 +56,13 @@ function compileFileToJS(src, id) {
   return result.code;
 }
 
-export default function svgPlugin() {
+export default function svgPlugin(options) {
   return {
     nane: "transfrom-svg",
     transform(src, id) {
       if (fileRegex.test(id)) {
         return {
-          code: compileFileToJS(src, id),
+          code: compileFileToJS(src, id, options),
           map: null,
         };
       }
