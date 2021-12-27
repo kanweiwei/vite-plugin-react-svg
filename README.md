@@ -8,7 +8,7 @@ import svgPlugin from "vite-plugin-react-svg";
 // vite.config.js
 // ...
 plugins: [
-    svgPlugin()
+    svgPlugin(options) // svgr options
 ]
 
 // ...
