@@ -21,14 +21,15 @@
     "url": "https://github.com/kanweiwei/vite-plugin-react-svg/issues"
   },
   "homepage": "https://github.com/kanweiwei/vite-plugin-react-svg#readme",
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.16.5",
     "@babel/preset-react": "^7.16.5",
     "@svgr/babel-preset": "^6.1.0",
     "@svgr/core": "^6.1.2",
     "@svgr/plugin-jsx": "^6.1.2",
-    "@svgr/plugin-svgo": "^6.1.2",
+    "@svgr/plugin-svgo": "^6.1.2"
+  },
+  "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-typescript": "^6.0.0-alpha.1",
     "prettier": "^2.5.1",
