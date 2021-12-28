@@ -1,43 +1,35 @@
-import svgr from "@svgr/core";
-
-import fs from "fs";
-import babel from "@babel/core";
+const transform = require("@svgr/core").transform;
+const fs = require("fs");
+const babel = require("@babel/core");
 const fileRegex = /\.svg$/;
 
-function defaultTemplate(
-  { template },
-  opts,
-  { imports, interfaces, componentName, props, jsx, exports }
-) {
-  const plugins = ["jsx"];
-  if (opts.typescript) {
-    plugins.push("typescript");
-  }
-  const typeScriptTpl = template.smart({ plugins });
-  return typeScriptTpl.ast`
-    ${imports}
+function defaultTemplate(variables, { tpl }) {
+  return tpl`
+${variables.imports};
 
-    ${interfaces}
+${variables.interfaces};
 
-    export function ${componentName}(${props}) {
-      return (
-        ${jsx}
-      );
-    }
-  `;
+export const ${variables.componentName} = (${variables.props}) => (
+  ${variables.jsx}
+);
+ 
+`;
 }
 
-function compileFileToJS(src, id, options) {
+export function compileFileToJS(src, id, options) {
   // 读取文件内容
   const buf = fs.readFileSync(id, "utf-8");
   const svgXml = buf.toString();
-  const base64 = new Buffer(svgXml).toString("base64");
-  const ops = Object.assign({},{ icon: true, template: defaultTemplate }, options);
-  const jsx = svgr.sync(
-    svgXml,
-    ops,
-    { componentName: "ReactComponent" }
+  const base64 = Buffer.from(svgXml).toString("base64");
+  const ops = Object.assign(
+    {},
+    { icon: true, template: defaultTemplate },
+    options
   );
+  const jsx = transform.sync(svgXml, ops, {
+    componentName: "ReactComponent",
+    filePath: id,
+  });
   const component = `
     ${jsx}
 
