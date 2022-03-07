@@ -50,7 +50,7 @@ export function compileFileToJS(src, id, options) {
 
 export default function svgPlugin(options) {
   return {
-    nane: "transfrom-svg",
+    name: "transform-svg",
     transform(src, id) {
       if (fileRegex.test(id)) {
         return {
